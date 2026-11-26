@@ -13,6 +13,8 @@ same one line. Writes exactly one line to /output/entry.txt.
 import os
 import sys
 
+MAX_CHARS = 200
+
 ROAST = (
     "My fridge's ice maker groans like it's lifting weights, "
     "then drops three cubes and clocks out — the only thing in "
@@ -34,8 +36,11 @@ def main():
     if "\n" in entry or "\r" in entry:
         print("error: entry must be exactly one line", file=sys.stderr)
         return 1
-    if not 1 <= len(entry) <= 200:
-        print("error: entry must be 1-200 characters", file=sys.stderr)
+    if not 1 <= len(entry) <= MAX_CHARS:
+        print(f"error: entry must be 1-{MAX_CHARS} characters", file=sys.stderr)
+        return 1
+    if entry != entry.strip():
+        print("error: entry must not start or end with whitespace", file=sys.stderr)
         return 1
     os.makedirs("/output", exist_ok=True)
     # Output file: exactly one line (entry plus trailing newline),
